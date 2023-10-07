@@ -1,0 +1,5 @@
+﻿  TrataXML.cpp
+D:\Projetos\C++\TrataXML\GetFIX.h(8,1): warning C4005: 'SIZEERRORTABLE': redefinição de macro
+D:\Projetos\C++\TrataXML\VerifyGetXML.h(11): message : consulte a definição anterior de 'SIZEERRORTABLE'
+D:\Projetos\C++\TrataXML\TrataXML.cpp(41,12): warning C4189: 'start': variável local é inicializada mas não referenciada
+  TrataXML.vcxproj -> D:\Projetos\C++\TrataXML\x64\Debug\TrataXML.exe

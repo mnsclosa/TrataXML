@@ -1,0 +1,2 @@
+D:\Projetos\C++\TrataXML\TrataXML\x64\Debug\TrataXML.exe
+D:\Projetos\C++\TrataXML\x64\Debug\TrataXML.exe
