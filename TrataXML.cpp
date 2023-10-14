@@ -19,7 +19,7 @@ int main()
 	errno_t errorXML = NULL; /* erro retornado da abertura do arquivo */
 
 	/* abro o arquivo somente pra leitura e verifico se o arquivo foi aberto*/
-	errorXML = fopen_s( &archXML,"XMLFile4.xml","rb" );
+	errorXML = fopen_s( &archXML,"D:/Projetos/C++/XMLHTML.xml","rb" );
 	if( errorXML == NULL )
 	{
 		fseek( archXML,0,SEEK_END );
@@ -38,10 +38,10 @@ int main()
 			fread( buffer,sizeof( char ),tamanho,archXML );
 
 			// Start measuring time
-			clock_t start = clock();
-			high_resolution_clock::time_point t1 = high_resolution_clock::now();
+			//clock_t start = clock();
+			auto t1 = high_resolution_clock::now();
 
-			int val = GetXml( buffer );
+			int val = GetXmlALL( buffer );
 
 			if( val != OK )
 			{
@@ -52,10 +52,17 @@ int main()
 			{
 				char* content = NULL;
 				int size = 0;
-					printf( "%s\n",GetTag( buffer,(char*)"soap:Header",false,&size ) );
-					printf( "%s\n",GetTag( buffer,(char*)"ns2:messageData",false,&size ) );
-					printf( "%s\n",GetTag( buffer,(char*)"ns2:participant",false,&size,(char*)"ns2:code" ) );
-					printf( "%s\n",GetTag( buffer,(char*)"ns2:routingInformation",false,&size,(char*)"ns2:code" ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"soap:Header",true,&size ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"ns2:messageData",true,&size ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"GvUpOnCaptr",true,&size ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"ns2:participant",true,&size,(char*)"ns2:code" ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"ns2:routingInformation",true,&size,(char*)"ns2:code" ) );
+
+				GetTag( buffer,(char*)"soap:Header",true,&size );
+				GetTag( buffer,(char*)"ns2:messageData",true,&size );
+				GetTag( buffer,(char*)"GvUpOnCaptr",true,&size );
+				GetTag( buffer,(char*)"ns2:participant",true,&size,(char*)"ns2:code" );
+				GetTag( buffer,(char*)"ns2:routingInformation",true,&size,(char*)"ns2:code" );
 
 				//	GetTag( buffer,(char*)"soap:Header",false );
 
@@ -72,19 +79,19 @@ int main()
 				//GetNameFIX( (char*)"37",true );
 				//GetNameFIX( (char*)"524",true );
 
-				//	val = GetXmlHTML( content = GetTag( buffer,(char*)"ns2:messageData",false,&size ) );
-				//	GetTag( buffer,(char*)"ns2:participant",false,size,(char*)"ns2:code" );
-				//	GetTag( buffer,(char*)"ns2:routingInformation",false,size,(char*)"ns2:code" );
+				//val = GetXmlHTML( content = GetTag( buffer,(char*)"ns2:messageData",false,&size ),&val );
+				//GetTag( buffer,(char*)"ns2:participant",false,&size,(char*)"ns2:code" );
+				//GetTag( buffer,(char*)"ns2:routingInformation",false,&size,(char*)"ns2:code" );
+				//GetTag( buffer,(char*)"ClrAcct",true,&size );
+				//GetTag( buffer,(char*)"TradLegDtls",true,&size,(char*)"TradDt" );
+				//GetTag( buffer,(char*)"TradgPty",true,&size,(char*)"Id" );
 
-				//	printf( "%s\n",GetTag( content,(char*)"PrtryId",false,&size,(char*)"Id" ) );
+				//GetTag( content,(char*)"PrtryId",false,&size,(char*)"Id" );
+				//printf( "%s\n",GetTag( content,(char*)"PrtryId",false,&size,(char*)"Id" ) );
 				//	printf( "%s\n",GetTag( buffer,(char*)"ClrAcct",true,size,(char*)"Id" ) );
 				//	printf( "%s\n",GetTag( buffer,(char*)"TradLegDtls",true,size,(char*)"TradDt" ) );
 				//	printf( "%s\n",GetTag( buffer,(char*)"TradgPty",true,size,(char*)"Id" ) );
 
-				//	GetTag( content,(char*)"PrtryId",false,&size,(char*)"Id" );
-				//	GetTag( buffer,(char*)"ClrAcct",true,size );
-				//	GetTag( buffer,(char*)"TradLegDtls",true,size,(char*)"TradDt" );
-				//	GetTag( buffer,(char*)"TradgPty",true,size,(char*)"Id" );
 
 					 //Stop measuring time and calculate the elapsed time
 				if( error != OK )
@@ -94,11 +101,12 @@ int main()
 				}
 				free( content );
 			}
-			high_resolution_clock::time_point t2 = high_resolution_clock::now();
+			auto t2 = high_resolution_clock::now();
 
-			duration<double> time_span = duration_cast<duration<double>>( t2 - t1 );
+			//duration<double> time_span = duration_cast<duration<double>>( t2 - t1 );
+			auto duration = duration_cast<microseconds>( t2 - t1 );
 
-			std::cout << "Tempo gasto :" << time_span.count() << " seconds.";
+			std::cout << "Tempo gasto :" << (double)( duration.count() / 1000.0 ) << " Micro Segundos.";
 			std::cout << std::endl;
 
 			/* libero o ponteiro,libero e fecho o arquivo */

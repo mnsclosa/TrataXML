@@ -70,24 +70,29 @@ char* GetNameFIX( char* valFIX,bool sequencialRead )
   *		GetFIX( char *record )	Le um registro FIX. Verificando a versão para associar os devidos nomes dos campos
   *
   *		record = informação com o registro FIX.
+  *		pos = se for ler GetXmlALL vem com a ultima posição lida caso contrário é zero.
   *
   *		retorno = o código do erro.
   *
   */
 
 
-int GetFix( const char* record )
+int GetFix( const char* record,int* pos )
 {
 	int	_size = strlen( record ) + 1; /* pego o tamanho da string que foi passada */
 
-	/* limpo a quantidade de Tags */
-	amountFix = 1;
+	/* se for somente a leitura da TAG a partir do primeiro byte */
+	if( pos == 0 )
+	{
+		/* limpo a quantidade de Tags */
+		amountFix = 1;
+	}
 
 	/* inicializo a struct com null */
 	recordFIX = (struct Recordfix*)calloc( amountFix,sizeof( struct Recordfix ) );
 
 	/* leio byte a byte do arquivo */
-	for( register int count = 0,count2 = 0;count < _size;count++ )
+	for( register int count = *pos,count2 = 0;count < _size;count++ )
 	{
 		/* procuro o caracter de indicação de termino do campo no caso o caracter SOH */
 		if( record[count] == '=' )
@@ -99,7 +104,7 @@ int GetFix( const char* record )
 			memcpy( recordFIX[amountFix - 1].nameFIX,nameFix,count2 );
 
 			/* limpo o campo */
-			memset( nameFix,0x00,1024 );
+			memset( nameFix,0x00,NAMEFIX );
 
 			count++;	/* incremento em um para não salvar o sinalo de igual */
 			count2 = 0; /* inicio a posição do campo lido */
@@ -116,7 +121,7 @@ int GetFix( const char* record )
 					memcpy( recordFIX[amountFix - 1].valueFIX,valueFix,count2 );
 
 					/* limpo o campo */
-					memset( valueFix,0x00,1024 );
+					memset( valueFix,0x00,VALUEFIX );
 
 					count++;	/* incremento em um para não salvar o finalizador */
 					break;
@@ -139,6 +144,11 @@ int GetFix( const char* record )
 			else
 				free( _recordFIX );
 
+		}
+		else if( !memcmp( "</",&record[count],2 ) )
+		{
+			*pos = count;
+			break;
 		}
 
 		/* salvo o valor lido */
