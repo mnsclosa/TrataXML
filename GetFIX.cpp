@@ -135,15 +135,13 @@ int GetFix( const char* record,int* pos )
 			amountFix++;
 
 			/* feito desta forma para evitar o warning e para liberar a memória com mais segurança em caso de erro */
-			struct Recordfix* _recordFIX = (struct Recordfix*)realloc( recordFIX,sizeof( struct Recordfix ) * amountFix ); /* crio mais uma struct */
+			struct Recordfix* _recordFIX = (struct Recordfix*)calloc( amountFix,sizeof( struct Recordfix ) );
 			if( _recordFIX != NULL )
 			{
 				recordFIX = _recordFIX;
 				memset( &recordFIX[amountFix - 1],0x00,sizeof( struct Recordfix ) );
-			}
-			else
 				free( _recordFIX );
-
+			}
 		}
 		else if( !memcmp( "</",&record[count],2 ) )
 		{

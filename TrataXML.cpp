@@ -41,7 +41,7 @@ int main()
 			//clock_t start = clock();
 			auto t1 = high_resolution_clock::now();
 
-			int val = GetXmlALL( buffer );
+			int val = GetXmlALL( buffer,true );
 
 			if( val != OK )
 			{
@@ -54,15 +54,17 @@ int main()
 				int size = 0;
 				//printf( "%s\n",GetTag( buffer,(char*)"soap:Header",true,&size ) );
 				//printf( "%s\n",GetTag( buffer,(char*)"ns2:messageData",true,&size ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"BizMsgIdr",true,&size ) );
 				//printf( "%s\n",GetTag( buffer,(char*)"GvUpOnCaptr",true,&size ) );
 				//printf( "%s\n",GetTag( buffer,(char*)"ns2:participant",true,&size,(char*)"ns2:code" ) );
 				//printf( "%s\n",GetTag( buffer,(char*)"ns2:routingInformation",true,&size,(char*)"ns2:code" ) );
 
 				GetTag( buffer,(char*)"soap:Header",true,&size );
 				GetTag( buffer,(char*)"ns2:messageData",true,&size );
-				GetTag( buffer,(char*)"GvUpOnCaptr",true,&size );
+				//GetTag( buffer,(char*)"GvUpOnCaptr",true,&size );
 				GetTag( buffer,(char*)"ns2:participant",true,&size,(char*)"ns2:code" );
 				GetTag( buffer,(char*)"ns2:routingInformation",true,&size,(char*)"ns2:code" );
+				//printf( "%s\n",buffer );
 
 				//	GetTag( buffer,(char*)"soap:Header",false );
 

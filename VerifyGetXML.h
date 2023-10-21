@@ -47,7 +47,7 @@ char	nameTag[NAMETAG] = { NULL };
 char	nameEndTag[NAMETAG] = { NULL };
 char	typeFRAME = 0x00; /* indica qual o tipo do messageData */
 int		error = OK; /* numero do erro */
-int		amountTags = 1; /* quantidade de TAG´s */
+int		amountTags = 0; /* quantidade de TAG´s */
 int		lastReadTag = 0;/* ultima TAG lida */
 #else
 // Funções
@@ -56,7 +56,7 @@ extern char* GetError( void );
 extern void ReleaseMemory( void );
 extern int	GetXml( const char* record );
 extern int	GetXmlHTML( const char* record,int *pos );
-extern int	GetXmlALL( const char* record );
+extern int	GetXmlALL( const char* record,bool swap = false );
 
 // variáveis
 extern struct		Recordxml* recordXML;

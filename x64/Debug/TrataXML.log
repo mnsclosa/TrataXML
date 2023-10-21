@@ -1,4 +1,21 @@
 ﻿  TrataXML.cpp
 D:\Projetos\C++\TrataXML\GetFIX.h(8,1): warning C4005: 'SIZEERRORTABLE': redefinição de macro
 D:\Projetos\C++\TrataXML\VerifyGetXML.h(11): message : consulte a definição anterior de 'SIZEERRORTABLE'
+  VerifyGetXML.cpp
+D:\Projetos\C++\TrataXML\GetFIX.h(8,1): warning C4005: 'SIZEERRORTABLE': redefinição de macro
+D:\Projetos\C++\TrataXML\VerifyGetXML.h(11): message : consulte a definição anterior de 'SIZEERRORTABLE'
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(82,28): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(159,35): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(160,7): warning C4189: '_posEndEnvelope': variável local é inicializada mas não referenciada
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(161,10): warning C4189: '_amount': variável local é inicializada mas não referenciada
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(363,35): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(364,45): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(487,19): warning C4457: a declaração de 'pos' oculta um parâmetro de função
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(360,41): message : consulte a declaração de 'pos'
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(365,10): warning C4189: '_amount': variável local é inicializada mas não referenciada
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(644,35): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(645,7): warning C4189: '_posEndEnvelope': variável local é inicializada mas não referenciada
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(646,10): warning C4189: '_amount': variável local é inicializada mas não referenciada
+  Gerando Código...
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(107): warning C4172: retornando o endereço da variável local ou temporário: _error
   TrataXML.vcxproj -> D:\Projetos\C++\TrataXML\x64\Debug\TrataXML.exe
