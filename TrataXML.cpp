@@ -19,7 +19,7 @@ int main()
 	errno_t errorXML = NULL; /* erro retornado da abertura do arquivo */
 
 	/* abro o arquivo somente pra leitura e verifico se o arquivo foi aberto*/
-	errorXML = fopen_s( &archXML,"D:/Projetos/C++/XMLHTML.xml","rb" );
+	errorXML = fopen_s( &archXML,"D:/Projetos/C++/XMLFIX.xml","rb" );
 	if( errorXML == NULL )
 	{
 		fseek( archXML,0,SEEK_END );
@@ -62,7 +62,7 @@ int main()
 				GetTag( buffer,(char*)"soap:Header",true,&size );
 				GetTag( buffer,(char*)"ns2:messageData",true,&size );
 				//GetTag( buffer,(char*)"GvUpOnCaptr",true,&size );
-				GetTag( buffer,(char*)"ns2:participant",true,&size,(char*)"ns2:code" );
+				//GetTag( buffer,(char*)"ns2:participant",true,&size,(char*)"ns2:code" );
 				GetTag( buffer,(char*)"ns2:routingInformation",true,&size,(char*)"ns2:code" );
 				//printf( "%s\n",buffer );
 
@@ -76,10 +76,10 @@ int main()
 				//printf( "%s\n",GetNameFIX( (char*)"37",true ) );
 				//printf( "%s\n",GetNameFIX( (char*)"524",true ) );
 
-				//GetNameFIX( (char*)"55",true );
-				//GetNameFIX( (char*)"35553",true );
-				//GetNameFIX( (char*)"37",true );
-				//GetNameFIX( (char*)"524",true );
+				GetNameFIX( (char*)"55",true );
+				GetNameFIX( (char*)"35553",true );
+				GetNameFIX( (char*)"37",true );
+				GetNameFIX( (char*)"524",true );
 
 				//val = GetXmlHTML( content = GetTag( buffer,(char*)"ns2:messageData",false,&size ),&val );
 				//GetTag( buffer,(char*)"ns2:participant",false,&size,(char*)"ns2:code" );

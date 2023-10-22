@@ -224,6 +224,7 @@ int GetXml( const char* record )
 					/* caracter > ou espaço */
 					if( record[count] == charNotAllowed[16] || record[count] == ' ' )
 					{
+						/* somente após a primeiro criado */
 						if( amountTags > 0 )
 							recordXML = (struct Recordxml*)realloc( recordXML,sizeof( struct Recordxml ) * ( amountTags + 1 ) ); /* crio mais uma struct */
 
@@ -267,7 +268,7 @@ int GetXml( const char* record )
 						count++;
 
 						/* limpo a variavel */
-						memset( nameTag,0x00,200 );
+						memset( nameTag,0x00,NAMETAG );
 
 						/* indico para ler a próxima TAG */
 						_nextTag = true;
@@ -367,29 +368,12 @@ int GetXmlHTML( const char* record,int* pos )
 	/* se for somente a leitura da TAG a partir do primeiro byte */
 	if( pos == 0 )
 	{
-		/* reinicio a posição da busca, pois estou lendo um novo valor */
-		lastReadTag = 0;
-
 		/* libero a memoria se existir algo alocado */
 		ReleaseMemory();
 
 		/* inicializo a struct com null */
 		recordXML = (struct Recordxml*)calloc( amountTags,sizeof( struct Recordxml ) );
-
-		/* Leio a ultima TAG que é a de fechamento da primeira para diminuir o custo de olhar um a um até o fim */
-		while( _posEndEnvelope > 0 )
-		{
-			/* procuro os caracteres de inicio do fechamento da TAG </ */
-			if( !memcmp( &record[_posEndEnvelope],"&lt;/",5 ) )
-			{
-				_posEndEnvelope--;
-				break;
-			}
-			_posEndEnvelope--;
-		}
 	}
-	else
-		_posEndEnvelope = 0;
 
 	/* leio byte a byte do arquivo */
 	for( register int count = *pos;count < _size;count++ )
@@ -445,6 +429,10 @@ int GetXmlHTML( const char* record,int* pos )
 					/* caracter > ou espaço */
 					if( !memcmp( &record[count],"&gt;",4 ) || record[count] == ' ' )
 					{
+						/* somente após a primeiro criado */
+						if( amountTags > 0 )
+							recordXML = (struct Recordxml*)realloc( recordXML,sizeof( struct Recordxml ) * ( amountTags + 1 ) ); /* crio mais uma struct */
+
 						/* crio o ponteiro */
 						recordXML[amountTags].nameTAG = (char*)calloc( static_cast<size_t>( count2 + 1 ),sizeof( char ) );
 
@@ -473,64 +461,12 @@ int GetXmlHTML( const char* record,int* pos )
 
 								/* salvo a posição inicial */
 								recordXML[amountTags].initPos = count + 4;
-
-								/* limpo a variavel */
-								memset( nameEndTag,0x00,NAMETAG );
-
-								/* crio a TAG de fechamento */
-								strcat_s( nameEndTag,"&lt;/" );
-								strcat_s( nameEndTag,recordXML[amountTags].nameTAG );
-								strcat_s( nameEndTag,"&gt;" );
-
-								/* crio a variavel aqui para liberar memória mais rápido,retorno 2 para o caso do fechamento estar logo em seguida e
-								   acrescento a TAG final do Envelope na primeira passada com a posição lida anteriormente */
-								int pos = ( _posEndEnvelope == 0 ) ? count - 2 : _posEndEnvelope - 2;
-
-								error = ENDTAGNOTEXIST;
-
-								/* para evitar um loop infinito */
-								while( pos < _size )
-								{
-									/* procuro a TAG de fechamento */
-									if( memcmp( nameEndTag,&record[pos++],strlen( nameEndTag ) ) == 0 )
-									{
-										/* salvo a posição inicial */
-										recordXML[amountTags].endPos = pos - 2;
-										error = OK;
-										break;
-									}
-								}
-								if( error == ENDTAGNOTEXIST )
-								{
-									/* salvo o nome da função */
-									memcpy( nameFunctionError,"GetXmlHTML",strlen( "GetXmlHTML" ) );
-
-									/* salvo o nome da TAG */
-									memcpy( tagError,recordXML[amountTags].nameTAG,strlen( recordXML[amountTags].nameTAG ) );
-
-									return error;
-								}
+								recordXML[amountTags].endPos = 0;
 
 								amountTags++; /* incremento a quantidade de TAG's*/
-								_posEndEnvelope = 0; /* indico que já li o envelope*/
 
-								/* feito desta forma para evitar o warning e para liberar a memória com mais segurança em caso de erro*/
-								struct Recordxml* _recordXML = (struct Recordxml*)realloc( recordXML,sizeof( struct Recordxml ) * amountTags ); /* crio mais uma struct */
-								if( _recordXML != NULL )
-								{
-									recordXML = _recordXML;
-									memset( &recordXML[amountTags],0x00,sizeof( struct Recordxml ) );
-								}
-								else
-									free( _recordXML );
-								break;
+							break;
 							}
-
-							///* procuro as aspas */
-							//if( !memcmp( &record[count],"&quot;",6 ) )
-							//{
-							//}
-
 							nameTag[count2++] = record[count++];
 						}
 						/* reposiciono a posição da variavel temporária no início e a geral no próximo */
@@ -753,7 +689,19 @@ int GetXmlALL( const char* record,bool swap = false )
 						count++;
 
 						/* limpo a variavel */
-						memset( nameTag,0x00,200 );
+						memset( nameTag,0x00,NAMETAG );
+
+						/* indico para ler a próxima TAG */
+						_nextTag = true;
+						break;
+					}
+				}
+				else if( record[count] == charNotAllowed[17] ) /* verifico se não é interrogação */
+				{
+					/* pulo e deixo para o loop acertar o finalizador */
+					if( !memcmp( &record[count],"?xml",4 ) )
+					{
+						count += 4;
 
 						/* indico para ler a próxima TAG */
 						_nextTag = true;
@@ -772,7 +720,7 @@ int GetXmlALL( const char* record,bool swap = false )
 					memset( tagError,0x00,TAGERROR );
 
 					/* salvo o nome da TAG */
-					memcpy( tagError,recordXML[amountTags].nameTAG,strlen( recordXML[amountTags].nameTAG ) );
+					memcpy( tagError,recordXML[amountTags - 1].nameTAG,strlen( recordXML[amountTags - 1].nameTAG ) );
 					return error;
 				}
 				/* salvo o valor lido */
@@ -830,6 +778,12 @@ int GetXmlALL( const char* record,bool swap = false )
 					memcpy( (char*)&record[count],">",1 );
 					memcpy( (char*)&record[count + 1],(char*)&record[count + 4],_size - count );
 				}
+
+				/* elimino os caracteres removidos do total */
+				_size -= 3;
+
+				/* retorno 1 para fazer a leitura da TAG */
+				//count -= 1;
 			}
 		}
 		else if( !memcmp( &record[count],"&lt;",4 ) && record[count + 4] != charNotAllowed[12] )
