@@ -19,7 +19,7 @@ int main()
 	errno_t errorXML = NULL; /* erro retornado da abertura do arquivo */
 
 	/* abro o arquivo somente pra leitura e verifico se o arquivo foi aberto*/
-	errorXML = fopen_s( &archXML,"D:/Projetos/C++/XMLFIX.xml","rb" );
+	errorXML = fopen_s( &archXML,"D:/Projetos/C++/XMLHTMLQuot.xml","rb" );
 	if( errorXML == NULL )
 	{
 		fseek( archXML,0,SEEK_END );

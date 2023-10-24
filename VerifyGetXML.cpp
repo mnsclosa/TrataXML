@@ -465,7 +465,7 @@ int GetXmlHTML( const char* record,int* pos )
 
 								amountTags++; /* incremento a quantidade de TAG's*/
 
-							break;
+								break;
 							}
 							nameTag[count2++] = record[count++];
 						}
@@ -768,15 +768,20 @@ int GetXmlALL( const char* record,bool swap = false )
 			if( !memcmp( &record[count],"&",1 ) )
 			{
 				/* faço a troca do caracter scape */
-				if( !memcmp( &record[count + 1],"l",1 ) )
+				if( !memcmp( &record[count + 1],"l",1 ) ) /* troco &lt; por < */
 				{
 					memcpy( (char*)&record[count],"<",1 );
 					memcpy( (char*)&record[count + 1],(char*)&record[count + 4],_size - count );
 				}
-				else if( !memcmp( &record[count + 1],"g",1 ) )
+				else if( !memcmp( &record[count + 1],"g",1 ) ) /* troco &gt; por > */
 				{
 					memcpy( (char*)&record[count],">",1 );
 					memcpy( (char*)&record[count + 1],(char*)&record[count + 4],_size - count );
+				}
+				else if( !memcmp( &record[count + 1],"q",1 ) ) /* troco o &quot por " */
+				{
+					memcpy( (char*)&record[count],(char*)&charNotAllowed[1],1 );
+					memcpy( (char*)&record[count + 1],(char*)&record[count + 6],_size - count );
 				}
 
 				/* elimino os caracteres removidos do total */
