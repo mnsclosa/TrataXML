@@ -7,20 +7,48 @@
 #include <string.h>
 #include <malloc.h>
 
+void ReleaseMemoryFIX( void )
+{
+	/* libero somente se aloquei algo */
+	if( ( amountFix ) > 0 )
+	{
+		/* somente se houver algo criado */
+		if( recordFIX != NULL )
+		{
+			/* leio uma a uma para fazer a liberação das Tag´s.Faço um a um por garantia e por norma libero ao contrário do que foi criado */
+			for( register int count = amountFix;count > -1;count-- )
+			{
+				free( recordFIX[count].nameFIX );
+				free( recordFIX[count].valueFIX );
+			}
+
+			/* libero a struct */
+			free( recordFIX );
+		}
+	}
+
+	/* reinicio a posição da busca, pois estou lendo um novo valor */
+	lastReadNameFix = 0;
+
+	/* limpo a quantidade de Tags */
+	amountFix = 0;
+}
+
 /*
   *
-  *		GetNameFIX( char* valFIX,bool sequencialRead )	Le o conteúdo da struct FIX especificada.
+  *		GetNameFIX( char* valFIX,bool sequencialRead,bool mandatory )	Le o conteúdo da struct FIX especificada.
   *
   *		valFIX = Nome do campo FIX a ser lido.
   *		sequencialRead = garanto que a leitura será sequencial ou  não.
-  *
-  *		retorno = retorna o valor obtido na leitura.
+*		mandatory = indica que o campo FIX tem que existir.
+   *
+  *		retorno = retorna o valor obtido na leitura ou NULL caso contrário.
   *
   */
 
-char* GetNameFIX( char* valFIX,bool sequencialRead )
+char* GetNameFIX( char* valFIX,bool sequencialRead,bool mandatory )
 {
-	char*			value = NULL;
+	char* value = NULL;
 	int				val = 0;
 	register int	count = 0;
 
@@ -29,7 +57,7 @@ char* GetNameFIX( char* valFIX,bool sequencialRead )
 		lastReadNameFix = 0;
 
 	/* procuro a campo FIX selecionado */
-	for( count = lastReadNameFix;count < amountFix - 1;count++ )
+	for( count = lastReadNameFix;count < amountFix;count++ )
 	{
 		/* guardo o tamanho do nome a ser procurado */
 		val = strlen( valFIX );
@@ -50,8 +78,16 @@ char* GetNameFIX( char* valFIX,bool sequencialRead )
 	}
 
 	/* se não encontrei o campo FIX */
-	if( count == amountFix - 1 )
+	if( count == amountFix )
 	{
+		flagErrorFIX = true; /* encontrei um erro */
+
+		/* verifico se o campo é mandatorio para acertar o erro */
+		if( mandatory == false )
+			errorFIX = NAMENOTEXIST;
+		else
+			errorFIX = NAMEMANDATORY;
+
 		errorFIX = NAMENOTEXIST;
 
 		/* salvo o nome da função */
@@ -62,6 +98,35 @@ char* GetNameFIX( char* valFIX,bool sequencialRead )
 	}
 
 	return value;
+}
+
+/*
+ *
+ *		GetErrorFIX()	Monta uma ponteiro com o erro ocorrido.
+ *
+ *		passgem = Não tem.
+ *
+ *		retorno = retorna a string com o erro formatado
+ *
+ */
+
+char* GetErrorFIX( void )
+{
+	char _error[500] = { NULL };
+
+	/* monto a mensagem */
+	strcat_s( _error,errorTableFIX[errorFIX] );
+
+	/* somente se houve erro */
+	if( errorFIX != OK )
+	{
+		strcat_s( _error," - TagFIX: " );
+		strcat_s( _error,nameFIXError );
+		strcat_s( _error," - Funcao: " );
+		strcat_s( _error,nameFIXFunctionError );
+	}
+
+	return _error;
 }
 
 /*
@@ -85,11 +150,11 @@ int GetFix( const char* record,int* pos )
 	if( pos == 0 )
 	{
 		/* limpo a quantidade de Tags */
-		amountFix = 1;
+		amountFix = 0;
 	}
 
 	/* inicializo a struct com null */
-	recordFIX = (struct Recordfix*)calloc( amountFix,sizeof( struct Recordfix ) );
+	recordFIX = (struct Recordfix*)calloc( amountFix + 1,sizeof( struct Recordfix ) );
 
 	/* leio byte a byte do arquivo */
 	for( register int count = *pos,count2 = 0;count < _size;count++ )
@@ -97,11 +162,14 @@ int GetFix( const char* record,int* pos )
 		/* procuro o caracter de indicação de termino do campo no caso o caracter SOH */
 		if( record[count] == '=' )
 		{
+			if( amountFix > 0 )
+				recordFIX = (struct Recordfix*)realloc( recordFIX,sizeof( struct Recordfix ) * ( amountFix + 1 ) ); /* crio mais uma struct */
+
 			/* crio o ponteiro */
-			recordFIX[amountFix - 1].nameFIX = (char*)calloc( static_cast<size_t>( count2 + 1 ),sizeof( char ) );
+			recordFIX[amountFix].nameFIX = (char*)calloc( static_cast<size_t>( count2 + 1 ),sizeof( char ) );
 
 			/* copio os valores do nome da TAG */
-			memcpy( recordFIX[amountFix - 1].nameFIX,nameFix,count2 );
+			memcpy( recordFIX[amountFix].nameFIX,nameFix,count2 );
 
 			/* limpo o campo */
 			memset( nameFix,0x00,NAMEFIX );
@@ -115,10 +183,10 @@ int GetFix( const char* record,int* pos )
 				if( record[count] == 0x01 )
 				{
 					/* crio o ponteiro */
-					recordFIX[amountFix - 1].valueFIX = (char*)calloc( static_cast<size_t>( count2 + 1 ),sizeof( char ) );
+					recordFIX[amountFix].valueFIX = (char*)calloc( static_cast<size_t>( count2 + 1 ),sizeof( char ) );
 
 					/* copio os valores do nome da TAG */
-					memcpy( recordFIX[amountFix - 1].valueFIX,valueFix,count2 );
+					memcpy( recordFIX[amountFix].valueFIX,valueFix,count2 );
 
 					/* limpo o campo */
 					memset( valueFix,0x00,VALUEFIX );
@@ -134,21 +202,13 @@ int GetFix( const char* record,int* pos )
 
 			amountFix++;
 
-			/* feito desta forma para evitar o warning e para liberar a memória com mais segurança em caso de erro */
-			struct Recordfix* _recordFIX = (struct Recordfix*)calloc( amountFix,sizeof( struct Recordfix ) );
-			if( _recordFIX != NULL )
+			/* verifico o finalizador se existir */
+			if( !memcmp( "</",&record[count],2 ) )
 			{
-				recordFIX = _recordFIX;
-				memset( &recordFIX[amountFix - 1],0x00,sizeof( struct Recordfix ) );
-				free( _recordFIX );
+				*pos = count;
+				break;
 			}
 		}
-		else if( !memcmp( "</",&record[count],2 ) )
-		{
-			*pos = count;
-			break;
-		}
-
 		/* salvo o valor lido */
 		nameFix[count2++] = record[count];
 	}

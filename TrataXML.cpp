@@ -52,18 +52,20 @@ int main()
 			{
 				char* content = NULL;
 				int size = 0;
-				//printf( "%s\n",GetTag( buffer,(char*)"soap:Header",true,&size ) );
-				//printf( "%s\n",GetTag( buffer,(char*)"ns2:messageData",true,&size ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"soap:Header",true,&size,false ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"Action",true,&size,false ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"ns2:messageData",true,&size,false ) );
 				//printf( "%s\n",GetTag( buffer,(char*)"BizMsgIdr",true,&size ) );
 				//printf( "%s\n",GetTag( buffer,(char*)"GvUpOnCaptr",true,&size ) );
-				//printf( "%s\n",GetTag( buffer,(char*)"ns2:participant",true,&size,(char*)"ns2:code" ) );
-				//printf( "%s\n",GetTag( buffer,(char*)"ns2:routingInformation",true,&size,(char*)"ns2:code" ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"ns2:participant",true,&size,false,(char*)"ns2:code" ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"ns2:routingInformation",true,&size,false,(char*)"ns2:code" ) );
 
-				GetTag( buffer,(char*)"soap:Header",true,&size );
-				GetTag( buffer,(char*)"ns2:messageData",true,&size );
-				//GetTag( buffer,(char*)"GvUpOnCaptr",true,&size );
-				//GetTag( buffer,(char*)"ns2:participant",true,&size,(char*)"ns2:code" );
-				GetTag( buffer,(char*)"ns2:routingInformation",true,&size,(char*)"ns2:code" );
+				GetTag( buffer,(char*)"soap:Header",true,&size,false );
+				GetTag( buffer,(char*)"Action",true,&size,true );
+				GetTag( buffer,(char*)"ns2:messageData",true,&size,false );
+				GetTag( buffer,(char*)"GvUpOnCaptr",true,&size,false );
+				GetTag( buffer,(char*)"ns2:participant",true,&size,false,(char*)"ns2:code" );
+				GetTag( buffer,(char*)"ns2:routingInformation",true,&size,false,(char*)"ns2:code" );
 				//printf( "%s\n",buffer );
 
 				//	GetTag( buffer,(char*)"soap:Header",false );
@@ -71,15 +73,15 @@ int main()
 				//GetTag( buffer,(char*)"ns2:messageData",false,&size );
 				//content = GetTag( buffer,(char*)"ns2:messageData",false,&size );
 				//int valFIX = GetFix( content );
-				//printf( "%s\n",GetNameFIX( (char*)"55",true ) );
+				//printf( "%s\n",GetNameFIX( (char*)"35",true ) );
 				//printf( "%s\n",GetNameFIX( (char*)"35553",true ) );
 				//printf( "%s\n",GetNameFIX( (char*)"37",true ) );
 				//printf( "%s\n",GetNameFIX( (char*)"524",true ) );
 
-				GetNameFIX( (char*)"55",true );
-				GetNameFIX( (char*)"35553",true );
-				GetNameFIX( (char*)"37",true );
-				GetNameFIX( (char*)"524",true );
+				GetNameFIX( (char*)"35",true,true );
+				GetNameFIX( (char*)"35553",true,false );
+				GetNameFIX( (char*)"37",true,false );
+				GetNameFIX( (char*)"524",true,false );
 
 				//val = GetXmlHTML( content = GetTag( buffer,(char*)"ns2:messageData",false,&size ),&val );
 				//GetTag( buffer,(char*)"ns2:participant",false,&size,(char*)"ns2:code" );
@@ -95,16 +97,22 @@ int main()
 				//	printf( "%s\n",GetTag( buffer,(char*)"TradgPty",true,size,(char*)"Id" ) );
 
 
-					 //Stop measuring time and calculate the elapsed time
-				if( error != OK )
+				if( error != OK || flagError == true )
 				{
 					memcpy( buffer,GetError(),strlen( GetError() ) + 1 );
+					printf( "%s.\n",buffer );
+				}
+
+				if( errorFIX != OK || flagErrorFIX == true )
+				{
+					memcpy( buffer,GetErrorFIX(),strlen( GetErrorFIX() ) + 1 );
 					printf( "%s.\n",buffer );
 				}
 				free( content );
 			}
 			auto t2 = high_resolution_clock::now();
 
+			//Stop measuring time and calculate the elapsed time
 			//duration<double> time_span = duration_cast<duration<double>>( t2 - t1 );
 			auto duration = duration_cast<microseconds>( t2 - t1 );
 

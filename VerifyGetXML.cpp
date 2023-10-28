@@ -14,19 +14,20 @@
 
  /*
   *
-  *		GetTAG( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,char* subTAG = { NULL } )	Le o conteúdo da TAG especificada.
+  *		GetTAG( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,bool mandatory,char* subTAG = { NULL } )	Le o conteúdo da TAG especificada.
   *
   *		record = informação com o registro XML.
   *		nameTAG = Nome da Tag a ser lida.
-  *		subTAG = Le o conteúdo quando este estiver dentro de uma SUBTAG (NULL por padrão).
   *		sequencialRead = garanto que a leitura será sequencial.
   *		sizeTag = retorna o tamanho lido da TAG.
+  *		mandatory = indica que a TAG tem que existir.
+  *		subTAG = Le o conteúdo quando este estiver dentro de uma SUBTAG (NULL por padrão).
   *
-  *		retorno = retorna o valor obtido na leitura.
+  *		retorno = retorna o valor obtido na leitura, senão houver erro, caso contrário retornará NULL e sizeTag zero.
   *
   */
 
-char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,char* subTAG = { NULL } )
+char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,bool mandatory,char* subTAG = { NULL } )
 {
 	char* value = NULL;
 	int		val = 0;
@@ -62,6 +63,7 @@ char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,char* 
 			if( sequencialRead == true )
 				lastReadTag = count;
 
+			error = OK;
 			break;
 		}
 	}
@@ -69,7 +71,13 @@ char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,char* 
 	/* se não encontrei a TAG */
 	if( count == amountTags )
 	{
-		error = TAGNOTEXIST;
+		flagError = true; /* encontrei um erro */
+
+		/* verifico se o campo é mandatorio para acertar o erro */
+		if( mandatory == false )
+			error = TAGNOTEXIST;
+		else
+			error = TAGMANDATORY;
 
 		/* salvo o nome da função */
 		memcpy( nameFunctionError,"GetTag",strlen( "GetXml" ) );
@@ -77,9 +85,10 @@ char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,char* 
 		strcat_s( tagError,nameTAG );
 		strcat_s( tagError," - " );
 		strcat_s( tagError,subTAG == NULL ? "" : subTAG );
-		value = (char*)calloc( static_cast<size_t>( 0 ),sizeof( char ) );
+		*sizeTag = 0;
 	}
-	*sizeTag = strlen( value );
+	else
+		*sizeTag = strlen( value );
 	return value;
 }
 
@@ -99,10 +108,13 @@ char* GetError( void )
 
 	/* monto a mensagem */
 	strcat_s( _error,errorTable[error] );
-	strcat_s( _error," - Tag: " );
-	strcat_s( _error,tagError );
-	strcat_s( _error," - Funcao: " );
-	strcat_s( _error,nameFunctionError );
+	if( error != OK )
+	{
+		strcat_s( _error," - Tag: " );
+		strcat_s( _error,tagError );
+		strcat_s( _error," - Funcao: " );
+		strcat_s( _error,nameFunctionError );
+	}
 
 	return _error;
 }
@@ -122,22 +134,26 @@ void ReleaseMemory( void )
 	/* libero somente se aloquei algo */
 	if( ( amountTags ) > 0 )
 	{
-		/* leio uma a uma para fazer a liberação das Tag´s.Faço um a um por garantia e por norma libero ao contrário do que foi criado */
-		for( register int count = amountTags;count > -1;count-- )
+		/* somente se houver algo criado */
+		if( recordXML != NULL )
 		{
-			free( recordXML[count].nameTAG );
-			free( recordXML[count].TAGComplete );
+			/* leio uma a uma para fazer a liberação das Tag´s.Faço um a um por garantia e por norma libero ao contrário do que foi criado */
+			for( register int count = amountTags;count > -1;count-- )
+			{
+				free( recordXML[count].nameTAG );
+				free( recordXML[count].TAGComplete );
+			}
+
+			/* libero a struct */
+			free( recordXML );
 		}
-
-		/* libero a struct */
-		free( recordXML );
-
-		/* reinicio a posição da busca, pois estou lendo um novo valor */
-		lastReadTag = 0;
-
-		/* limpo a quantidade de Tags */
-		amountTags = 0;
 	}
+
+	/* reinicio a posição da busca, pois estou lendo um novo valor */
+	lastReadTag = 0;
+
+	/* limpo a quantidade de Tags */
+	amountTags = 0;
 }
 
 /*
@@ -614,7 +630,7 @@ int GetXmlALL( const char* record,bool swap = false )
 					if( record[count] == '>' || record[count] == ' ' )
 					{
 						/* salvo o nome da função */
-						memcpy( nameFunctionError,"GetXml",strlen( "GetXml" ) );
+						memcpy( nameFunctionError,"GetXmlALL",strlen( "GetXmlALL" ) );
 						break;
 					}
 
@@ -648,7 +664,7 @@ int GetXmlALL( const char* record,bool swap = false )
 						if( amountTags > 0 )
 							recordXML = (struct Recordxml*)realloc( recordXML,sizeof( struct Recordxml ) * ( amountTags + 1 ) ); /* crio mais uma struct */
 
-							/* crio o ponteiro */
+						/* crio o ponteiro */
 						recordXML[amountTags].nameTAG = (char*)calloc( static_cast<size_t>( count2 + 1 ),sizeof( char ) );
 
 						/* copio os valores do nome da TAG */
@@ -714,7 +730,7 @@ int GetXmlALL( const char* record,bool swap = false )
 					error = CHARNOTALLOWED;
 
 					/* salvo o nome da função */
-					memcpy( nameFunctionError,"GetXml",strlen( "GetXml" ) );
+					memcpy( nameFunctionError,"GetXmlALL",strlen( "GetXmlALL" ) );
 
 					/* limpo a tagError*/
 					memset( tagError,0x00,TAGERROR );
@@ -751,7 +767,8 @@ int GetXmlALL( const char* record,bool swap = false )
 			for( int pos = amountTags - 1;pos > -1;pos-- )
 			{
 				/* procuro a TAG de fechamento */
-				if( !memcmp( nameEndTag,recordXML[pos].nameTAG,strlen( nameEndTag ) ) && !recordXML[pos].endPos )
+				if( !memcmp( nameEndTag,recordXML[pos].nameTAG,( strlen( nameEndTag ) ) &&
+					strlen( nameEndTag ) == strlen( recordXML[pos].nameTAG ) ) && !recordXML[pos].endPos )
 				{
 					/* salvo a posição inicial */
 					recordXML[pos].endPos = add - 1;
@@ -759,6 +776,19 @@ int GetXmlALL( const char* record,bool swap = false )
 					error = OK;
 					break;
 				}
+			}
+			/* se houve erro não continuo */
+			if( error != OK )
+			{
+				/* salvo o nome da função */
+				memcpy( nameFunctionError,"GetXmlALL",strlen( "GetXmlALL" ) );
+
+				/* limpo a tagError*/
+				memset( tagError,0x00,TAGERROR );
+
+				/* salvo o nome da TAG */
+				memcpy( tagError,recordXML[amountTags - 1].nameTAG,strlen( recordXML[amountTags - 1].nameTAG ) );
+				return error;
 			}
 		}
 
@@ -799,6 +829,7 @@ int GetXmlALL( const char* record,bool swap = false )
 
 		if( !memcmp( &record[count],"8=",2 ) && record[count - 1] != 0x01 )
 		{
+			ReleaseMemoryFIX();
 			GetFix( record,&count );
 			typeFRAME = FIXFRAME; /* ajusto para o FIX */
 		}

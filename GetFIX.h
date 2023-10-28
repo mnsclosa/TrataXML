@@ -3,9 +3,10 @@
 
 #define OK							0
 #define NAMENOTEXIST				1
+#define NAMEMANDATORY				2
 
 /* trocar a definição de tamanho pela ultimo define criado */
-#define SIZEERRORTABLE NAMENOTEXIST + 1
+#define SIZEERRORTABLE NAMEMANDATORY + 1
 
 #define NAMEFIXERROR				50
 #define NAMEFIXFUNCTIONERROR		50
@@ -14,6 +15,7 @@
 
 #ifdef FIX
 
+bool	flagErrorFIX = false; /* indica que houve erro */
 /* struct com as Tags e posições do registro XML*/
 struct Recordfix
 {
@@ -24,7 +26,8 @@ struct Recordfix
 /* mensagens de erro da montagem do registro */
 const char* errorTableFIX[SIZEERRORTABLE] = {
 						{"Leitura dos registros FIX executado com sucesso."},
-						{"Campo FIX solicitado nao existe."}
+						{"Campo FIX solicitado nao existe."},
+						{"Campo FIX solicitado e obrigatorio."}
 };
 char	nameFIXError[NAMEFIXERROR] = { NULL }; /* nome do campo FIX que contem o erro */
 char	nameFIXFunctionError[NAMEFIXFUNCTIONERROR] = { NULL }; /* nome da função que gerou o erro */
@@ -33,15 +36,19 @@ char	nameFix[NAMEFIX] = { NULL };
 char	valueFix[VALUEFIX] = { NULL };
 
 int		errorFIX = OK; /* numero do erro */
-int		amountFix = 1; /* quantidade de registros FIX´s */
+int		amountFix = 0; /* quantidade de registros FIX´s */
 int		lastReadNameFix = 0; /* salva a posição do ultimo camo FIX lido */
 #else
 // Funções
-extern char* GetNameFIX( char* nameFIX,bool sequencialRead );
+extern void ReleaseMemoryFIX( void );
+extern char* GetErrorFIX( void );
+extern char* GetNameFIX( char* nameFIX,bool sequencialRead,bool mandatory );
 
 extern int	GetFix( const char* record,int* pos );
 
 // variáveis
+extern bool	flagErrorFIX; /* indica que houve erro */
+
 extern char	nameFIXError[NAMEFIXERROR]; /* nome do campo FIX que contem o erro */
 extern char	nameFIXFunctionError[NAMEFIXFUNCTIONERROR]; /* nome da função que gerou o erro */
 

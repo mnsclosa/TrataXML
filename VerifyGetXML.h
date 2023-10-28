@@ -6,9 +6,10 @@
 #define CHARNOTALLOWED				2
 #define ENDTAGNOTEXIST				3
 #define TAGNOTEXIST					4
+#define TAGMANDATORY				5
 
 /* trocar a definição de tamanho pela ultimo define criado */
-#define SIZEERRORTABLE TAGNOTEXIST + 1
+#define SIZEERRORTABLE TAGMANDATORY + 1
 
 
 #define TAGERROR					50
@@ -20,6 +21,7 @@
 #define MASKFRAME					0x03
 
 #ifdef XML
+bool	flagError = false; /* indica que houve erro */
 
 /* struct com as Tags e posições do registro XML*/
 struct Recordxml
@@ -36,7 +38,8 @@ const char* errorTable[SIZEERRORTABLE] = {
 						{"Uma Tag nao pode iniciar com numero, espaco, ponto ou traco."},
 						{"Um caracter invalido esta presente no nome da TAG."},
 						{"Par de Tag´s nao encontrada."},
-						{"Tag solicitada nao existe."}
+						{"Tag solicitada nao existe."},
+						{"Tag solicitada e obrigatoria."}
 };
 /* caracteres não permitidos na TAG                 ' */
 const char  charNotAllowed[] = { '!','"','#','$','%','&','\'','(',')','*','+',',','/',
@@ -51,7 +54,7 @@ int		amountTags = 0; /* quantidade de TAG´s */
 int		lastReadTag = 0;/* ultima TAG lida */
 #else
 // Funções
-extern char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,char* subTAG = { NULL } );
+extern char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,bool mandatory,char* subTAG = { NULL } );
 extern char* GetError( void );
 extern void ReleaseMemory( void );
 extern int	GetXml( const char* record );
@@ -59,6 +62,8 @@ extern int	GetXmlHTML( const char* record,int *pos );
 extern int	GetXmlALL( const char* record,bool swap = false );
 
 // variáveis
+extern	bool		flagError;
+
 extern struct		Recordxml* recordXML;
 extern const char*	errorTable[SIZEERRORTABLE];
 extern char			charNotAllowed[];
