@@ -4,9 +4,10 @@
 #define OK							0
 #define NAMENOTEXIST				1
 #define NAMEMANDATORY				2
+#define FIXEMPTY					3
 
 /* trocar a definição de tamanho pela ultimo define criado */
-#define SIZEERRORTABLE NAMEMANDATORY + 1
+#define SIZEERRORTABLE FIXEMPTY + 1
 
 #define NAMEFIXERROR				50
 #define NAMEFIXFUNCTIONERROR		50
@@ -27,7 +28,8 @@ struct Recordfix
 const char* errorTableFIX[SIZEERRORTABLE] = {
 						{"Leitura dos registros FIX executado com sucesso."},
 						{"Campo FIX solicitado nao existe."},
-						{"Campo FIX solicitado e obrigatorio."}
+						{"Campo FIX solicitado e obrigatorio."},
+						{"Nao existe informacao FIX para tratar."}
 };
 char	nameFIXError[NAMEFIXERROR] = { NULL }; /* nome do campo FIX que contem o erro */
 char	nameFIXFunctionError[NAMEFIXFUNCTIONERROR] = { NULL }; /* nome da função que gerou o erro */
@@ -44,7 +46,7 @@ extern void ReleaseMemoryFIX( void );
 extern char* GetErrorFIX( void );
 extern char* GetNameFIX( char* nameFIX,bool sequencialRead,bool mandatory );
 
-extern int	GetFix( const char* record,int* pos );
+extern int	GetFix( const char* record,int* pos,char charswap = 0x00 );
 
 // variáveis
 extern bool	flagErrorFIX; /* indica que houve erro */

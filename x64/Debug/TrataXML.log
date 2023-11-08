@@ -1,16 +1,16 @@
 ﻿  VerifyGetXML.cpp
-D:\Projetos\C++\TrataXML\GetFIX.h(9,1): warning C4005: 'SIZEERRORTABLE': redefinição de macro
+D:\Projetos\C++\TrataXML\GetFIX.h(10,1): warning C4005: 'SIZEERRORTABLE': redefinição de macro
 D:\Projetos\C++\TrataXML\VerifyGetXML.h(12): message : consulte a definição anterior de 'SIZEERRORTABLE'
-D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(91,29): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
-D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(175,35): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
-D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(176,7): warning C4189: '_posEndEnvelope': variável local é inicializada mas não referenciada
-D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(177,10): warning C4189: '_amount': variável local é inicializada mas não referenciada
-D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(380,35): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
-D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(381,45): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
-D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(381,7): warning C4189: '_posEndEnvelope': variável local é inicializada mas não referenciada
-D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(382,10): warning C4189: '_amount': variável local é inicializada mas não referenciada
-D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(596,35): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
-D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(597,7): warning C4189: '_posEndEnvelope': variável local é inicializada mas não referenciada
-D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(598,10): warning C4189: '_amount': variável local é inicializada mas não referenciada
-D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(119): warning C4172: retornando o endereço da variável local ou temporário: _error
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(100,29): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(184,35): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(185,7): warning C4189: '_posEndEnvelope': variável local é inicializada mas não referenciada
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(186,10): warning C4189: '_amount': variável local é inicializada mas não referenciada
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(389,35): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(390,45): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(390,7): warning C4189: '_posEndEnvelope': variável local é inicializada mas não referenciada
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(391,10): warning C4189: '_amount': variável local é inicializada mas não referenciada
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(605,35): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(606,7): warning C4189: '_posEndEnvelope': variável local é inicializada mas não referenciada
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(607,10): warning C4189: '_amount': variável local é inicializada mas não referenciada
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(128): warning C4172: retornando o endereço da variável local ou temporário: _error
   TrataXML.vcxproj -> D:\Projetos\C++\TrataXML\x64\Debug\TrataXML.exe

@@ -26,6 +26,7 @@ bool	flagError = false; /* indica que houve erro */
 /* struct com as Tags e posições do registro XML*/
 struct Recordxml
 {
+	char* nameSpace;	/* name space da TAG*/
 	char* nameTAG;		/* nome da TAG*/
 	char* TAGComplete;	/* valor completo da TAG*/
 	int	  initPos;		/* localização incial do conteúdo da TAG*/
@@ -46,6 +47,7 @@ const char  charNotAllowed[] = { '!','"','#','$','%','&','\'','(',')','*','+',',
 						   ';','<','=','>','?','@','[','\\',']','^','/','`','{','|','}','~' };
 char	tagError[TAGERROR] = { NULL }; /* nome da TAG que contem o erro */
 char	nameFunctionError[NAMEFUNCTIONERROR] = { NULL }; /* nome da função que gerou o erro */
+char	nameSpace[NAMETAG] = { NULL };
 char	nameTag[NAMETAG] = { NULL };
 char	nameEndTag[NAMETAG] = { NULL };
 char	typeFRAME = 0x00; /* indica qual o tipo do messageData */

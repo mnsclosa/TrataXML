@@ -136,82 +136,93 @@ char* GetErrorFIX( void )
   *
   *		record = informação com o registro FIX.
   *		pos = se for ler GetXmlALL vem com a ultima posição lida caso contrário é zero.
+  *		charswap = caracter que sera trocado, Default NULL
   *
   *		retorno = o código do erro.
   *
   */
 
 
-int GetFix( const char* record,int* pos )
+int GetFix( const char* record,int* pos,char charswap = 0x00 )
 {
-	int	_size = strlen( record ) + 1; /* pego o tamanho da string que foi passada */
+	int	_size = strlen( record == NULL ? record = "0" : record ) + 1; /* pego o tamanho da string que foi passada */
 
-	/* se for somente a leitura da TAG a partir do primeiro byte */
-	if( pos == 0 )
+	/* se existir algo para tratar */
+	if( _size > 2 )
 	{
-		/* limpo a quantidade de Tags */
-		amountFix = 0;
-	}
-
-	/* inicializo a struct com null */
-	recordFIX = (struct Recordfix*)calloc( amountFix + 1,sizeof( struct Recordfix ) );
-
-	/* leio byte a byte do arquivo */
-	for( register int count = *pos,count2 = 0;count < _size;count++ )
-	{
-		/* procuro o caracter de indicação de termino do campo no caso o caracter SOH */
-		if( record[count] == '=' )
+		/* se for somente a leitura da TAG a partir do primeiro byte */
+		if( pos == 0 )
 		{
-			if( amountFix > 0 )
-				recordFIX = (struct Recordfix*)realloc( recordFIX,sizeof( struct Recordfix ) * ( amountFix + 1 ) ); /* crio mais uma struct */
+			/* limpo a quantidade de Tags */
+			amountFix = 0;
+		}
 
-			/* crio o ponteiro */
-			recordFIX[amountFix].nameFIX = (char*)calloc( static_cast<size_t>( count2 + 1 ),sizeof( char ) );
+		/* inicializo a struct com null */
+		recordFIX = (struct Recordfix*)calloc( amountFix + 1,sizeof( struct Recordfix ) );
 
-			/* copio os valores do nome da TAG */
-			memcpy( recordFIX[amountFix].nameFIX,nameFix,count2 );
-
-			/* limpo o campo */
-			memset( nameFix,0x00,NAMEFIX );
-
-			count++;	/* incremento em um para não salvar o sinalo de igual */
-			count2 = 0; /* inicio a posição do campo lido */
-
-			/* procuro pelo finalizador de campo caracter SOH */
-			while( count < _size )
+		/* leio byte a byte do arquivo */
+		for( register int count = *pos,count2 = 0;count < _size;count++ )
+		{
+			/* procuro o caracter de indicação de termino do campo no caso o caracter SOH */
+			if( record[count] == '=' )
 			{
-				if( record[count] == 0x01 )
+				if( amountFix > 0 )
+					recordFIX = (struct Recordfix*)realloc( recordFIX,sizeof( struct Recordfix ) * ( amountFix + 1 ) ); /* crio mais uma struct */
+
+				/* crio o ponteiro */
+				recordFIX[amountFix].nameFIX = (char*)calloc( static_cast<size_t>( count2 + 1 ),sizeof( char ) );
+
+				/* copio os valores do nome da TAG */
+				memcpy( recordFIX[amountFix].nameFIX,nameFix,count2 );
+
+				/* limpo o campo */
+				memset( nameFix,0x00,NAMEFIX );
+
+				count++;	/* incremento em um para não salvar o sinalo de igual */
+				count2 = 0; /* inicio a posição do campo lido */
+
+				/* procuro pelo finalizador de campo caracter SOH */
+				while( count < _size )
 				{
-					/* crio o ponteiro */
-					recordFIX[amountFix].valueFIX = (char*)calloc( static_cast<size_t>( count2 + 1 ),sizeof( char ) );
+					/* se o caracter a ser trocado exitir */
+					if( record[count] == charswap )
+						memcpy( (char*)&record[count],"\x01",1 );
 
-					/* copio os valores do nome da TAG */
-					memcpy( recordFIX[amountFix].valueFIX,valueFix,count2 );
+					if( record[count] == 0x01 )
+					{
+						/* crio o ponteiro */
+						recordFIX[amountFix].valueFIX = (char*)calloc( static_cast<size_t>( count2 + 1 ),sizeof( char ) );
 
-					/* limpo o campo */
-					memset( valueFix,0x00,VALUEFIX );
+						/* copio os valores do nome da TAG */
+						memcpy( recordFIX[amountFix].valueFIX,valueFix,count2 );
 
-					count++;	/* incremento em um para não salvar o finalizador */
+						/* limpo o campo */
+						memset( valueFix,0x00,VALUEFIX );
+
+						count++;	/* incremento em um para não salvar o finalizador */
+						break;
+					}
+
+					/* salvo o valor lido */
+					valueFix[count2++] = record[count++];
+				}
+				count2 = 0; /* inicio a posição do campo lido */
+
+				amountFix++;
+
+				/* verifico o finalizador se existir */
+				if( !memcmp( "</",&record[count],2 ) )
+				{
+					*pos = count;
 					break;
 				}
-
-				/* salvo o valor lido */
-				valueFix[count2++] = record[count++];
 			}
-			count2 = 0; /* inicio a posição do campo lido */
-
-			amountFix++;
-
-			/* verifico o finalizador se existir */
-			if( !memcmp( "</",&record[count],2 ) )
-			{
-				*pos = count;
-				break;
-			}
+			/* salvo o valor lido */
+			nameFix[count2++] = record[count];
 		}
-		/* salvo o valor lido */
-		nameFix[count2++] = record[count];
 	}
+	else
+		errorFIX = FIXEMPTY; /* não existe registro para tratar */
 
 	//for( int conta = 0;conta < amountFix - 1;conta++ )
 	//{

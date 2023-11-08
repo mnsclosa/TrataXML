@@ -19,7 +19,7 @@ int main()
 	errno_t errorXML = NULL; /* erro retornado da abertura do arquivo */
 
 	/* abro o arquivo somente pra leitura e verifico se o arquivo foi aberto*/
-	errorXML = fopen_s( &archXML,"D:/Projetos/C++/XMLHTMLQuot.xml","rb" );
+	errorXML = fopen_s( &archXML,"D:/Projetos/C++/XMLFIX.xml","rb" );
 	if( errorXML == NULL )
 	{
 		fseek( archXML,0,SEEK_END );
@@ -72,7 +72,7 @@ int main()
 
 				//GetTag( buffer,(char*)"ns2:messageData",false,&size );
 				//content = GetTag( buffer,(char*)"ns2:messageData",false,&size );
-				//int valFIX = GetFix( content );
+				//int valFIX = GetFix( content,&size );
 				//printf( "%s\n",GetNameFIX( (char*)"35",true ) );
 				//printf( "%s\n",GetNameFIX( (char*)"35553",true ) );
 				//printf( "%s\n",GetNameFIX( (char*)"37",true ) );

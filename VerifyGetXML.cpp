@@ -40,8 +40,17 @@ char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,bool m
 	/* procuro a TAG selecionada */
 	for( count = lastReadTag;count < amountTags;count++ )
 	{
+		/* copio o namespace na tag de leitura se existir */
+		if( strlen( recordXML[count].nameSpace ) > 0 )
+		{
+			strcat_s( nameSpace,recordXML[count].nameSpace );
+			strcat_s( nameSpace,":" );
+		}
+
+		strcat_s( nameSpace,recordXML[count].nameTAG );
+
 		/* procuro a TAG na string e verifico se o tamanho é identico para não ler strings parciais */
-		if( !memcmp( recordXML[count].nameTAG,nameTAG,strlen( nameTAG ) ) && ( strlen( recordXML[count].nameTAG ) == strlen( nameTAG ) ) )
+		if( !memcmp( recordXML[count].nameTAG,nameSpace,strlen( nameSpace ) ) && ( strlen( recordXML[count].nameTAG ) == strlen( nameSpace ) ) )
 		{
 			/* procuro pela subTAG se for diferente de NULL */
 			if( subTAG != NULL )
@@ -658,6 +667,10 @@ int GetXmlALL( const char* record,bool swap = false )
 					record[count] != charNotAllowed[23] && record[count] != charNotAllowed[24] && record[count] != charNotAllowed[25] &&
 					record[count] != charNotAllowed[26] && record[count] != charNotAllowed[27] && record[count] != charNotAllowed[28] )
 				{
+					/* procuro pela informação de name space */
+					if( record[count] == ':' )
+						memcpy( nameSpace,nameTag,strlen( nameTag ) );
+
 					/* caracter > ou espaço */
 					if( record[count] == charNotAllowed[16] || record[count] == ' ' )
 					{
@@ -665,11 +678,14 @@ int GetXmlALL( const char* record,bool swap = false )
 							recordXML = (struct Recordxml*)realloc( recordXML,sizeof( struct Recordxml ) * ( amountTags + 1 ) ); /* crio mais uma struct */
 
 						/* crio o ponteiro */
+						recordXML[amountTags].nameSpace = (char*)calloc( static_cast<size_t>( strlen( nameSpace ) + 1 ),sizeof( char ) );
 						recordXML[amountTags].nameTAG = (char*)calloc( static_cast<size_t>( count2 + 1 ),sizeof( char ) );
 
-						/* copio os valores do nome da TAG */
+						/* copio os valores do nome da TAG e o namespace */
+						memcpy( recordXML[amountTags].nameSpace,nameSpace,strlen( nameSpace ) );
 						memcpy( recordXML[amountTags].nameTAG,nameTag,count2 );
 
+						memset( nameSpace,0x00,NAMETAG );
 						memset( nameTag,0x00,NAMETAG );
 
 						count2 = 0; /* inicio a posição da TAG lida */
