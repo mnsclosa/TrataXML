@@ -52,20 +52,20 @@ int main()
 			{
 				char* content = NULL;
 				int size = 0;
-				//printf( "%s\n",GetTag( buffer,(char*)"soap:Header",true,&size,false ) );
-				//printf( "%s\n",GetTag( buffer,(char*)"Action",true,&size,false ) );
-				//printf( "%s\n",GetTag( buffer,(char*)"ns2:messageData",true,&size,false ) );
-				//printf( "%s\n",GetTag( buffer,(char*)"BizMsgIdr",true,&size ) );
-				//printf( "%s\n",GetTag( buffer,(char*)"GvUpOnCaptr",true,&size ) );
-				//printf( "%s\n",GetTag( buffer,(char*)"ns2:participant",true,&size,false,(char*)"ns2:code" ) );
-				//printf( "%s\n",GetTag( buffer,(char*)"ns2:routingInformation",true,&size,false,(char*)"ns2:code" ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"Header",true,&size,false ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"Action",true,&size,true ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"messageData",true,&size,false ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"BizMsgIdr",true,&size,false ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"GvUpOnCaptr",true,&size,false ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"participant",true,&size,false,(char*)"code" ) );
+				//printf( "%s\n",GetTag( buffer,(char*)"routingInformation",true,&size,false,(char*)"code" ) );
 
-				GetTag( buffer,(char*)"soap:Header",true,&size,false );
+				GetTag( buffer,(char*)"Header",true,&size,false );
 				GetTag( buffer,(char*)"Action",true,&size,true );
-				GetTag( buffer,(char*)"ns2:messageData",true,&size,false );
+				GetTag( buffer,(char*)"messageData",true,&size,false );
 				GetTag( buffer,(char*)"GvUpOnCaptr",true,&size,false );
-				GetTag( buffer,(char*)"ns2:participant",true,&size,false,(char*)"ns2:code" );
-				GetTag( buffer,(char*)"ns2:routingInformation",true,&size,false,(char*)"ns2:code" );
+				GetTag( buffer,(char*)"participant",true,&size,false,(char*)"code" );
+				GetTag( buffer,(char*)"routingInformation",true,&size,false,(char*)"code" );
 				//printf( "%s\n",buffer );
 
 				//	GetTag( buffer,(char*)"soap:Header",false );

@@ -40,6 +40,9 @@ char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,bool m
 	/* procuro a TAG selecionada */
 	for( count = lastReadTag;count < amountTags;count++ )
 	{
+		/* limpo o namespace */
+		memset( nameSpace,0x00,NAMETAG );
+
 		/* copio o namespace na tag de leitura se existir */
 		if( strlen( recordXML[count].nameSpace ) > 0 )
 		{
@@ -47,7 +50,7 @@ char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,bool m
 			strcat_s( nameSpace,":" );
 		}
 
-		strcat_s( nameSpace,recordXML[count].nameTAG );
+		strcat_s( nameSpace,nameTAG );
 
 		/* procuro a TAG na string e verifico se o tamanho é identico para não ler strings parciais */
 		if( !memcmp( recordXML[count].nameTAG,nameSpace,strlen( nameSpace ) ) && ( strlen( recordXML[count].nameTAG ) == strlen( nameSpace ) ) )
@@ -55,10 +58,22 @@ char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,bool m
 			/* procuro pela subTAG se for diferente de NULL */
 			if( subTAG != NULL )
 			{
+				/* limpo o namespace */
+				memset( nameSpace,0x00,NAMETAG );
+
+				/* copio o namespace na tag de leitura se existir */
+				if( strlen( recordXML[count].nameSpace ) > 0 )
+				{
+					strcat_s( nameSpace,recordXML[count].nameSpace );
+					strcat_s( nameSpace,":" );
+				}
+
+				strcat_s( nameSpace,subTAG );
+
 				while( count < amountTags )
 				{
 					/* procuro a subTAG na string e verifico se o tamanho é identico para não ler strings parciais */
-					if( !memcmp( recordXML[count].nameTAG,subTAG,strlen( subTAG ) ) && ( strlen( recordXML[count].nameTAG ) == strlen( subTAG ) ) )
+					if( !memcmp( recordXML[count].nameTAG,nameSpace,strlen( nameSpace ) ) && ( strlen( recordXML[count].nameTAG ) == strlen( nameSpace ) ) )
 						break;
 					count++;
 				}

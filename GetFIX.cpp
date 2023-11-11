@@ -150,6 +150,8 @@ int GetFix( const char* record,int* pos,char charswap = 0x00 )
 	/* se existir algo para tratar */
 	if( _size > 2 )
 	{
+		checkSum = 0; /* zero o checksum */
+
 		/* se for somente a leitura da TAG a partir do primeiro byte */
 		if( pos == 0 )
 		{
@@ -188,6 +190,9 @@ int GetFix( const char* record,int* pos,char charswap = 0x00 )
 					if( record[count] == charswap )
 						memcpy( (char*)&record[count],"\x01",1 );
 
+					/* calculo o checksum */
+					checkSum += (int)record[count];
+
 					if( record[count] == 0x01 )
 					{
 						/* crio o ponteiro */
@@ -220,6 +225,7 @@ int GetFix( const char* record,int* pos,char charswap = 0x00 )
 			/* salvo o valor lido */
 			nameFix[count2++] = record[count];
 		}
+		checkSum %= 256; /* calculo o modulo */
 	}
 	else
 		errorFIX = FIXEMPTY; /* não existe registro para tratar */
