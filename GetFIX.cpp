@@ -49,7 +49,7 @@ void ReleaseMemoryFIX( void )
 char* GetNameFIX( char* valFIX,bool sequencialRead,bool mandatory )
 {
 	char* value = NULL;
-	int				val = 0;
+	size_t				val = 0;
 	register int	count = 0;
 
 	/* garanto que estou fazendo a leitura na sequencia para ganhar tempo */
@@ -84,11 +84,11 @@ char* GetNameFIX( char* valFIX,bool sequencialRead,bool mandatory )
 
 		/* verifico se o campo é mandatorio para acertar o erro */
 		if( mandatory == false )
-			errorFIX = NAMENOTEXIST;
+			numberErrorFIX = NAMENOTEXIST;
 		else
-			errorFIX = NAMEMANDATORY;
+			numberErrorFIX = NAMEMANDATORY;
 
-		errorFIX = NAMENOTEXIST;
+		numberErrorFIX = NAMENOTEXIST;
 
 		/* salvo o nome da função */
 		memcpy( nameFIXFunctionError,"GetNameFIX",strlen( "GetNameFIX" ) );
@@ -112,21 +112,20 @@ char* GetNameFIX( char* valFIX,bool sequencialRead,bool mandatory )
 
 char* GetErrorFIX( void )
 {
-	char _error[500] = { NULL };
 
 	/* monto a mensagem */
-	strcat_s( _error,errorTableFIX[errorFIX] );
+	strcat_s( errorFix,errorTableFIX[numberErrorFIX] );
 
 	/* somente se houve erro */
-	if( errorFIX != OK )
+	if( numberErrorFIX != OK )
 	{
-		strcat_s( _error," - TagFIX: " );
-		strcat_s( _error,nameFIXError );
-		strcat_s( _error," - Funcao: " );
-		strcat_s( _error,nameFIXFunctionError );
+		strcat_s( errorFix," - TagFIX: " );
+		strcat_s( errorFix,nameFIXError );
+		strcat_s( errorFix," - Funcao: " );
+		strcat_s( errorFix,nameFIXFunctionError );
 	}
 
-	return _error;
+	return errorFix;
 }
 
 /*
@@ -145,7 +144,7 @@ char* GetErrorFIX( void )
 
 int GetFix( const char* record,int* pos,char charswap = 0x00 )
 {
-	int	_size = strlen( record == NULL ? record = "0" : record ) + 1; /* pego o tamanho da string que foi passada */
+	size_t	_size = strlen( record == NULL ? record = "0" : record ) + 1; /* pego o tamanho da string que foi passada */
 
 	/* se existir algo para tratar */
 	if( _size > 2 )
@@ -228,7 +227,7 @@ int GetFix( const char* record,int* pos,char charswap = 0x00 )
 		checkSum %= 256; /* calculo o modulo */
 	}
 	else
-		errorFIX = FIXEMPTY; /* não existe registro para tratar */
+		numberErrorFIX = FIXEMPTY; /* não existe registro para tratar */
 
 	//for( int conta = 0;conta < amountFix - 1;conta++ )
 	//{
@@ -240,5 +239,5 @@ int GetFix( const char* record,int* pos,char charswap = 0x00 )
 		//printf( "%s\n",teste );
 	//}
 
-	return errorFIX;
+	return numberErrorFIX;
 }

@@ -51,7 +51,7 @@ int main()
 			else
 			{
 				char* content = NULL;
-				int size = 0;
+				size_t size = 0;
 				//printf( "%s\n",GetTag( buffer,(char*)"Header",true,&size,false ) );
 				//printf( "%s\n",GetTag( buffer,(char*)"Action",true,&size,true ) );
 				//printf( "%s\n",GetTag( buffer,(char*)"messageData",true,&size,false ) );
@@ -103,7 +103,7 @@ int main()
 					printf( "%s.\n",buffer );
 				}
 
-				if( errorFIX != OK || flagErrorFIX == true )
+				if( numberErrorFIX != OK || flagErrorFIX == true )
 				{
 					memcpy( buffer,GetErrorFIX(),strlen( GetErrorFIX() ) + 1 );
 					printf( "%s.\n",buffer );
@@ -132,7 +132,7 @@ int main()
 
 	}
 	else
-		printf( "Arquivo inexistente ERRO: %d\n",errorFIX );
+		printf( "Arquivo inexistente ERRO: %d\n",numberErrorFIX );
 
 	return 0;
 }

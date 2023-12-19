@@ -27,7 +27,7 @@
   *
   */
 
-char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,bool mandatory,char* subTAG = { NULL } )
+char* GetTag( char* record,char* nameTAG,bool sequencialRead,size_t* sizeTag,bool mandatory,char* subTAG = { NULL } )
 {
 	char* value = NULL;
 	int		val = 0;
@@ -128,19 +128,18 @@ char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,bool m
 
 char* GetError( void )
 {
-	char _error[500] = { NULL };
 
 	/* monto a mensagem */
-	strcat_s( _error,errorTable[error] );
+	strcat_s( errorRet,errorTable[error] );
 	if( error != OK )
 	{
-		strcat_s( _error," - Tag: " );
-		strcat_s( _error,tagError );
-		strcat_s( _error," - Funcao: " );
-		strcat_s( _error,nameFunctionError );
+		strcat_s( errorRet," - Tag: " );
+		strcat_s( errorRet,tagError );
+		strcat_s( errorRet," - Funcao: " );
+		strcat_s( errorRet,nameFunctionError );
 	}
 
-	return _error;
+	return errorRet;
 }
 
 /*
@@ -196,9 +195,7 @@ void ReleaseMemory( void )
 int GetXml( const char* record )
 {
 	bool	_nextTag = false;
-	int		_size = strlen( record ) + 1;
-	int		_posEndEnvelope = _size - 2;/* posiciono no fim e retorno para encontrar o inicio da TAG de fechamento */
-	size_t  _amount = 0;
+	size_t		_size = strlen( record ) + 1;
 
 	/* libero a struct e seus componentes */
 	ReleaseMemory();
@@ -401,9 +398,7 @@ int GetXml( const char* record )
 int GetXmlHTML( const char* record,int* pos )
 {
 	bool	_nextTag = false;
-	int		_size = strlen( record ) + 1; /* pego o tamanho da string que foi passada */
-	int		_posEndEnvelope = strlen( record ) - 2;/* posiciono no fim e retorno para encontrar o inicio da TAG de fechamento */
-	size_t  _amount = 0;
+	size_t		_size = strlen( record ) + 1; /* pego o tamanho da string que foi passada */
 
 	/* se for somente a leitura da TAG a partir do primeiro byte */
 	if( pos == 0 )
@@ -617,9 +612,7 @@ int GetXmlHTML( const char* record,int* pos )
 int GetXmlALL( const char* record,bool swap = false )
 {
 	bool	_nextTag = false;
-	int		_size = strlen( record ) + 1;
-	int		_posEndEnvelope = _size - 2;/* posiciono no fim e retorno para encontrar o inicio da TAG de fechamento */
-	size_t  _amount = 0;
+	size_t		_size = strlen( record ) + 1;
 
 	/* libero a struct e seus componentes */
 	ReleaseMemory();

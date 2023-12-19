@@ -9,6 +9,7 @@
 #define TAGMANDATORY				5
 
 /* trocar a definição de tamanho pela ultimo define criado */
+#undef SIZEERRORTABLE
 #define SIZEERRORTABLE TAGMANDATORY + 1
 
 
@@ -51,12 +52,13 @@ char	nameSpace[NAMETAG] = { NULL };
 char	nameTag[NAMETAG] = { NULL };
 char	nameEndTag[NAMETAG] = { NULL };
 char	typeFRAME = 0x00; /* indica qual o tipo do messageData */
+char	errorRet[NAMETAG] = { NULL };
 int		error = OK; /* numero do erro */
 int		amountTags = 0; /* quantidade de TAG´s */
 int		lastReadTag = 0;/* ultima TAG lida */
 #else
 // Funções
-extern char* GetTag( char* record,char* nameTAG,bool sequencialRead,int* sizeTag,bool mandatory,char* subTAG = { NULL } );
+extern char* GetTag( char* record,char* nameTAG,bool sequencialRead,size_t* sizeTag,bool mandatory,char* subTAG = { NULL } );
 extern char* GetError( void );
 extern void ReleaseMemory( void );
 extern int	GetXml( const char* record );
@@ -74,6 +76,7 @@ extern char			nameFunctionError[NAMEFUNCTIONERROR];
 extern char			nameTag[NAMETAG];
 extern char			nameEndTag[NAMETAG];
 extern char			typeFRAME;
+extern char			errorRet[NAMETAG];
 extern int			error;
 extern int			amountTags;
 extern int			lastReadTag;

@@ -1,4 +1,6 @@
-﻿  TrataXML.cpp
-D:\Projetos\C++\TrataXML\GetFIX.h(10,1): warning C4005: 'SIZEERRORTABLE': redefinição de macro
-D:\Projetos\C++\TrataXML\VerifyGetXML.h(12): message : consulte a definição anterior de 'SIZEERRORTABLE'
+﻿  pch.cpp
+  GetFIX.cpp
+  TrataXML.cpp
+  VerifyGetXML.cpp
+  Gerando Código...
   TrataXML.vcxproj -> D:\Projetos\C++\TrataXML\x64\Debug\TrataXML.exe

@@ -7,6 +7,7 @@
 #define FIXEMPTY					3
 
 /* trocar a definição de tamanho pela ultimo define criado */
+#undef SIZEERRORTABLE
 #define SIZEERRORTABLE FIXEMPTY + 1
 
 #define NAMEFIXERROR				50
@@ -36,8 +37,9 @@ char	nameFIXFunctionError[NAMEFIXFUNCTIONERROR] = { NULL }; /* nome da função qu
 
 char	nameFix[NAMEFIX] = { NULL };
 char	valueFix[VALUEFIX] = { NULL };
+char	errorFix[NAMEFIX] = { NULL };
 
-int		errorFIX = OK; /* numero do erro */
+int		numberErrorFIX = OK; /* numero do erro */
 int		amountFix = 0; /* quantidade de registros FIX´s */
 int		lastReadNameFix = 0; /* salva a posição do ultimo camo FIX lido */
 int		checkSum = 0; /* valor do checksum da mensagem */
@@ -60,7 +62,8 @@ extern const char*	errorTableFIX[SIZEERRORTABLE];
 
 extern char			nameFix[NAMEFIX];
 extern char			valueFix[VALUEFIX];
-extern int			errorFIX;
+extern char			errorFix[NAMEFIX];
+extern int			numberErrorFIX;
 extern int			amountFix;
 extern int			lastReadNameFix;
 extern int			checkSum;
