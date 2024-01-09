@@ -1,5 +1,5 @@
-﻿  TrataXML.cpp
-D:\Projetos\C++\TrataXML\TrataXML.cpp(19,21): warning C4459: a declaração de 'errorXML' oculta uma declaração global
-D:\Projetos\C++\TrataXML\VerifyGetXML.h(106,14): message : consulte a declaração de 'errorXML'
-D:\Projetos\C++\TrataXML\TrataXML.cpp(55,12): warning C4189: 'size': variável local é inicializada mas não referenciada
+﻿  VerifyGetXML.cpp
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(461,5): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(243,7): warning C4189: '_nextTag': variável local é inicializada mas não referenciada
+D:\Projetos\C++\TrataXML\VerifyGetXML.cpp(1137,4): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
   TrataXML.vcxproj -> D:\Projetos\C++\TrataXML\x64\Debug\TrataXML.exe

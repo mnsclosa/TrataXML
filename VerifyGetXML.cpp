@@ -211,21 +211,8 @@ void ReleaseMemory( void )
 	{
 		/* somente se houver algo criado */
 		if( recordXML != NULL )
-		{
-			/* leio uma a uma para fazer a liberação das Tag´s.Faço um a um por garantia e por norma libero ao contrário do que foi criado */
-			for( register int count = amountFix;count > -1;count-- )
-			{
-				if( recordXML[count].nameTAG != NULL )
-				{
-					free( recordXML[count].nameTAG );
-					free( recordXML[count].TAGComplete );
-					free( recordXML[count].nameSpace );
-				}
-			}
-
 			/* libero a struct */
-			free( recordFIX );
-		}
+			free( recordXML );
 	}
 
 	/* reinicio a posição da busca, pois estou lendo um novo valor */
@@ -235,6 +222,8 @@ void ReleaseMemory( void )
 	amountTags = 0;
 
 	amountErrors = 0;
+	errorXML = OK;
+	posvarNew = 0;
 }
 
 /*
@@ -272,7 +261,7 @@ int GetXml( const char* record )
 		for( register int count = 0;count < _size;count++ )
 		{
 			/* procuro o caracter de abertura da TAG de abertura */
-			if( ( record[count] == '<' && record[count + 1] != '/' ) || ( !memcmp( &record[count],"&lt;",4 ) && record[count + 4] != '/' ) )
+			if( ( record[count] == '<' && record[count + 1] != '/' && record[count + 1] != '!' ) || ( !memcmp( &record[count],"&lt;",4 ) && record[count + 4] != '/' ) )
 			{
 				/* forço o valor lido */
 				_localChar = '<';
@@ -414,8 +403,19 @@ int GetXml( const char* record )
 						/* count++ < _size somente para não ficar infinitamente e não encontrar o caracter de fechamento da TAG */
 					} while( count++ < _size && _localChar != '>' && errorXML == OK );
 				}
+			}/* procuro pelos comentarios */
+			else if( !memcmp( &record[count],"<!",2 ) || !memcmp( &record[count],"&lt;!",5 ) )
+			{
+				while( count++ < _size )
+				{
+					if( !memcmp( &record[count],"->",2 ) )
+					{
+						count += 2;
+						break;
+					}
+				}
 			}/* procuro os caracteres de abertura da TAG de fechamento */
-			else if( !memcmp( &record[count],"</",2 ) || !memcmp( &record[count],"&lt;/",5 ) )
+			else if( !memcmp( &record[count],"</",2 ) || !memcmp( &record[count],"&lt;",5 ) )
 			{
 				int count1 = 0;
 				int count2 = 0;
@@ -535,9 +535,10 @@ int GetXml( const char* record )
 			{
 				typeFRAME = FIXFRAME; /* ajusto para o FIX */
 				GetFix( record,varNew,&count );
+				posvarNew = count;
+
 				/* retorno em 1 caracter para não perder o < */
 				count--;
-				posvarNew = count;
 			}
 			else
 				varNew[posvarNew++] = record[count];
