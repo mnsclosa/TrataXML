@@ -1,6 +1,5 @@
-﻿  pch.cpp
-  GetFIX.cpp
-  TrataXML.cpp
-  VerifyGetXML.cpp
-  Gerando Código...
+﻿  TrataXML.cpp
+D:\Projetos\C++\TrataXML\TrataXML.cpp(19,21): warning C4459: a declaração de 'errorXML' oculta uma declaração global
+D:\Projetos\C++\TrataXML\VerifyGetXML.h(106,14): message : consulte a declaração de 'errorXML'
+D:\Projetos\C++\TrataXML\TrataXML.cpp(55,12): warning C4189: 'size': variável local é inicializada mas não referenciada
   TrataXML.vcxproj -> D:\Projetos\C++\TrataXML\x64\Debug\TrataXML.exe

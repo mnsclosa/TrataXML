@@ -19,7 +19,7 @@ int main()
 	errno_t errorXML = NULL; /* erro retornado da abertura do arquivo */
 
 	/* abro o arquivo somente pra leitura e verifico se o arquivo foi aberto*/
-	errorXML = fopen_s( &archXML,"D:/Projetos/C++/XMLFIX.xml","rb" );
+	errorXML = fopen_s( &archXML,"D:/Projetos/C++/XMLESCxD.xml","rb" );
 	if( errorXML == NULL )
 	{
 		fseek( archXML,0,SEEK_END );
@@ -41,12 +41,13 @@ int main()
 			//clock_t start = clock();
 			auto t1 = high_resolution_clock::now();
 
-			int val = GetXmlALL( buffer,true );
+			int val = GetXml( buffer );
+			//int val = GetXmlALL( buffer,false );
 
 			if( val != OK )
 			{
-				memcpy( buffer,GetError(),strlen( GetError() ) + 1 );
-				printf( "%s.\n",buffer );
+				//memcpy( buffer,GetError(),strlen( GetError() ) + 1 );
+				printf( "%s.\n",GetError() );
 			}
 			else
 			{
@@ -56,16 +57,16 @@ int main()
 				//printf( "%s\n",GetTag( buffer,(char*)"Action",true,&size,true ) );
 				//printf( "%s\n",GetTag( buffer,(char*)"messageData",true,&size,false ) );
 				//printf( "%s\n",GetTag( buffer,(char*)"BizMsgIdr",true,&size,false ) );
-				//printf( "%s\n",GetTag( buffer,(char*)"GvUpOnCaptr",true,&size,false ) );
+				////printf( "%s\n",GetTag( buffer,(char*)"MktIdrCd",true,&size,false ) );
 				//printf( "%s\n",GetTag( buffer,(char*)"participant",true,&size,false,(char*)"code" ) );
 				//printf( "%s\n",GetTag( buffer,(char*)"routingInformation",true,&size,false,(char*)"code" ) );
 
-				GetTag( buffer,(char*)"Header",true,&size,false );
-				GetTag( buffer,(char*)"Action",true,&size,true );
-				GetTag( buffer,(char*)"messageData",true,&size,false );
-				GetTag( buffer,(char*)"GvUpOnCaptr",true,&size,false );
-				GetTag( buffer,(char*)"participant",true,&size,false,(char*)"code" );
-				GetTag( buffer,(char*)"routingInformation",true,&size,false,(char*)"code" );
+				//GetTag( buffer,(char*)"Header",true,&size,false );
+				//GetTag( buffer,(char*)"Action",true,&size,true );
+				//GetTag( buffer,(char*)"messageData",true,&size,false );
+				////GetTag( buffer,(char*)"GvUpOnCaptr",true,&size,false );
+				//GetTag( buffer,(char*)"participant",true,&size,false,(char*)"code" );
+				//GetTag( buffer,(char*)"routingInformation",true,&size,false,(char*)"code" );
 				//printf( "%s\n",buffer );
 
 				//	GetTag( buffer,(char*)"soap:Header",false );
@@ -73,17 +74,17 @@ int main()
 				//GetTag( buffer,(char*)"ns2:messageData",false,&size );
 				//content = GetTag( buffer,(char*)"ns2:messageData",false,&size );
 				//int valFIX = GetFix( content,&size );
-				//printf( "%s\n",GetNameFIX( (char*)"35",true ) );
-				//printf( "%s\n",GetNameFIX( (char*)"35553",true ) );
-				//printf( "%s\n",GetNameFIX( (char*)"37",true ) );
-				//printf( "%s\n",GetNameFIX( (char*)"524",true ) );
+				//printf( "%s\n",GetNameFIX( (char*)"35",true,true ) );
+				//printf( "%s\n",GetNameFIX( (char*)"35553",true,false ) );
+				//printf( "%s\n",GetNameFIX( (char*)"37",true,false ) );
+				//printf( "%s\n",GetNameFIX( (char*)"524",true,false ) );
 
-				GetNameFIX( (char*)"35",true,true );
-				GetNameFIX( (char*)"35553",true,false );
-				GetNameFIX( (char*)"37",true,false );
-				GetNameFIX( (char*)"524",true,false );
+				//GetNameFIX( (char*)"35",true,true );
+				//GetNameFIX( (char*)"35553",true,false );
+				//GetNameFIX( (char*)"37",true,false );
+				//GetNameFIX( (char*)"524",true,false );
 
-				//val = GetXmlHTML( content = GetTag( buffer,(char*)"ns2:messageData",false,&size ),&val );
+				//val = GetXmlESC( content = GetTag( buffer,(char*)"ns2:messageData",false,&size ),&val );
 				//GetTag( buffer,(char*)"ns2:participant",false,&size,(char*)"ns2:code" );
 				//GetTag( buffer,(char*)"ns2:routingInformation",false,&size,(char*)"ns2:code" );
 				//GetTag( buffer,(char*)"ClrAcct",true,&size );
@@ -97,7 +98,7 @@ int main()
 				//	printf( "%s\n",GetTag( buffer,(char*)"TradgPty",true,size,(char*)"Id" ) );
 
 
-				if( error != OK || flagError == true )
+				if( errorXML != OK || flagError == true )
 				{
 					memcpy( buffer,GetError(),strlen( GetError() ) + 1 );
 					printf( "%s.\n",buffer );

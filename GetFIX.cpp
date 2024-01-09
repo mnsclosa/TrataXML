@@ -65,9 +65,10 @@ char* GetNameFIX( char* valFIX,bool sequencialRead,bool mandatory )
 		/* procuro a campo FIX na string e verifico se o tamanho é identico para não ler strings parciais */
 		if( !memcmp( recordFIX[count].nameFIX,valFIX,val ) && ( strlen( recordFIX[count].nameFIX ) == val ) )
 		{
+			val = strlen( recordFIX[count].valueFIX );
 			value = (char*)calloc( static_cast<size_t>( val + 1 ),sizeof( char ) );
 
-			memcpy( &value,&recordFIX[count].valueFIX,val );
+			memcpy( value,recordFIX[count].valueFIX,val );
 
 			/* salvo a posição para dar continuidade na leitura */
 			if( sequencialRead == true )
@@ -134,6 +135,7 @@ char* GetErrorFIX( void )
   *		GetFIX( char *record )	Le um registro FIX. Verificando a versão para associar os devidos nomes dos campos
   *
   *		record = informação com o registro FIX.
+  *		newvar = trás a string nova.
   *		pos = se for ler GetXmlALL vem com a ultima posição lida caso contrário é zero.
   *		charswap = caracter que sera trocado, Default NULL
   *
@@ -142,7 +144,7 @@ char* GetErrorFIX( void )
   */
 
 
-int GetFix( const char* record,int* pos,char charswap = 0x00 )
+int GetFix( const char* record,char *newvar,int* pos,char charswap = 0x00 )
 {
 	size_t	_size = strlen( record == NULL ? record = "0" : record ) + 1; /* pego o tamanho da string que foi passada */
 
@@ -179,6 +181,9 @@ int GetFix( const char* record,int* pos,char charswap = 0x00 )
 				/* limpo o campo */
 				memset( nameFix,0x00,NAMEFIX );
 
+				/* salvo o igual */
+				newvar[count] = record[count];
+
 				count++;	/* incremento em um para não salvar o sinalo de igual */
 				count2 = 0; /* inicio a posição do campo lido */
 
@@ -191,6 +196,8 @@ int GetFix( const char* record,int* pos,char charswap = 0x00 )
 
 					/* calculo o checksum */
 					checkSum += (int)record[count];
+
+					newvar[count] = record[count];
 
 					if( record[count] == 0x01 )
 					{
@@ -223,6 +230,7 @@ int GetFix( const char* record,int* pos,char charswap = 0x00 )
 			}
 			/* salvo o valor lido */
 			nameFix[count2++] = record[count];
+			newvar[count] = record[count];
 		}
 		checkSum %= 256; /* calculo o modulo */
 	}

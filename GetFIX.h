@@ -49,7 +49,7 @@ extern void ReleaseMemoryFIX( void );
 extern char* GetErrorFIX( void );
 extern char* GetNameFIX( char* nameFIX,bool sequencialRead,bool mandatory );
 
-extern int	GetFix( const char* record,int* pos,char charswap = 0x00 );
+extern int	GetFix( const char* record,char* newvar,int* pos,char charswap = 0x00 );
 
 // variáveis
 extern bool	flagErrorFIX; /* indica que houve erro */
