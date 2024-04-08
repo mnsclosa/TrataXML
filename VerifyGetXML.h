@@ -1,6 +1,8 @@
 //#pragma once
 
 #include <cstddef>
+#include <mutex>
+
 #define OK							0
 #define CHARNOTSPACEPOINTFEATURE	1
 #define CHARNOTALLOWED				2
@@ -76,6 +78,7 @@ int		errorXML = OK; /* numero do erro */
 size_t	amountTags = 0; /* quantidade de TAG´s */
 size_t	amountErrors = 0; /* quantidade de errors */
 int		lastReadTag = 0;/* ultima TAG lida */
+
 #else
 // Funções
 extern char* GetTag( char* record,char* nameTAG,bool sequencialRead,size_t* sizeTag,bool mandatory,char* subTAG = { NULL } );

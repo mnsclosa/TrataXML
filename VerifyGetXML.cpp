@@ -79,7 +79,6 @@ char* GetTag( char* record,char* nameTAG,bool sequencialRead,size_t* sizeTag,boo
 	/* garanto que estou fazendo a leitura na sequencia para ganhar tempo */
 	if( sequencialRead == false )
 		lastReadTag = 0;
-
 	/* procuro a TAG selecionada */
 	for( count = lastReadTag;count < amountTags;count++ )
 	{
@@ -240,6 +239,7 @@ void ReleaseMemory( void )
 
 int GetXml( const char* record )
 {
+
 	bool	_nextTag = false;
 	bool	_tagxmlVersion = false;
 	char	_localChar = {};
@@ -551,6 +551,7 @@ int GetXml( const char* record )
 
 	/* libero varNew */
 	free( varNew );
+
 	return errorXML;
 }
 
